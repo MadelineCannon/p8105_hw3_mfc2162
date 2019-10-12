@@ -1,0 +1,15 @@
+---
+title: "p8105_hw3_mfc2162"
+author: "Madeline Cannon"
+date: "10/9/2019"
+output: github_document
+---
+
+## Load data
+
+```{r}
+library(p8105.datasets)
+data("instacart")
+```
+
+There are 1,384,617 observations and 15 variables in this dataset. Each observation is a product that was ordered. Some key variables are the hour of the day at which the product was ordered, the number of days since the last order, the name of the product, and the aisle and department that it is in. An example of an observation is Bulgarian yogurt, which was part of order 1, ordered at 10:00, and from the dairy and eggs department.
