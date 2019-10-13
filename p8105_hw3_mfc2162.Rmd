@@ -40,7 +40,8 @@ aisles_over_10000 = aisles %>% filter(n > 10000)
 
 aisle_plot <- ggplot(data=aisles_over_10000, aes(x=reorder(aisle, n), y=n)) +
   geom_bar(stat="identity") + xlab("Aisle") + ylab("Number of items ordered") +
-  coord_flip(xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
+  coord_flip(xlim = NULL, ylim = NULL, expand = TRUE, clip = "on") +
+  ggtitle("Number of items ordered by aisle")
 
 aisle_plot
 
@@ -157,5 +158,19 @@ excellent = brfss %>%
             select(year, state, data_value) %>%
             group_by(year, state) %>%
             summarize(mean_data_value = mean(data_value))
+
+```
+
+
+#### Spaghetti plot
+
+```{r}
+
+spaghetti_plot = excellent %>%
+                  ggplot(aes(x = year, y = mean_data_value, color = state)) +
+                    geom_line() + xlab("Year") + ylab("Mean Data Value") +
+                    ggtitle("Mean data value over time")
+
+spaghetti_plot
 
 ```
