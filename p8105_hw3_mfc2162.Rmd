@@ -62,3 +62,46 @@ three_aisles = instacart %>%
 three_aisles
 
 ```
+
+
+#### Mean hour table
+
+```{r}
+
+mean_hour_table = instacart %>%
+                    filter(product_name == "Pink Lady Apples" |
+                             product_name == "Coffee Ice Cream") %>%
+                    group_by(product_name, order_dow) %>%
+                    summarize(mean_hour = mean(order_hour_of_day)) %>%
+                    pivot_wider(names_from = "product_name",
+                                values_from = "mean_hour")
+
+for (row in 1:nrow(mean_hour_table)) {
+  if (mean_hour_table[row, "order_dow"] == 0) {
+    mean_hour_table[row, "order_dow"] = "Sunday"
+  }
+  if (mean_hour_table[row, "order_dow"] == 1) {
+    mean_hour_table[row, "order_dow"] = "Monday"
+  }
+  if (mean_hour_table[row, "order_dow"] == 2) {
+    mean_hour_table[row, "order_dow"] = "Tuesday"
+  }
+  if (mean_hour_table[row, "order_dow"] == 3) {
+    mean_hour_table[row, "order_dow"] = "Wednesday"
+  }
+  if (mean_hour_table[row, "order_dow"] == 4) {
+    mean_hour_table[row, "order_dow"] = "Thursday"
+  }
+  if (mean_hour_table[row, "order_dow"] == 5) {
+    mean_hour_table[row, "order_dow"] = "Friday"
+  }
+  if (mean_hour_table[row, "order_dow"] == 6) {
+    mean_hour_table[row, "order_dow"] = "Saturday"
+  }
+}
+
+names(mean_hour_table) = c("Day of the Week", "Pink Lady Apples", "Coffee Ice Cream")
+
+mean_hour_table
+
+```
