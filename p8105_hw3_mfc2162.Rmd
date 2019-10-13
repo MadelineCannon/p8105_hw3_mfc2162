@@ -19,16 +19,16 @@ data("instacart")
 
 There are `r nrow(instacart)` observations and `r ncol(instacart)` variables in this dataset. Each observation is a product that was ordered. Some key variables are the hour of the day at which the product was ordered, the number of days since the last order, the name of the product, and the aisle and department that it is in. An example of an observation is Bulgarian yogurt, which was part of order 1, ordered at 10:00, and from the dairy and eggs department.
 
-#### Aisles
+#### Aisle description
 
 ```{r}
 
-aisles = instacart %>% count(aisle_id)
+aisles = instacart %>% count(aisle)
 max_aisle = aisles %>% filter(n == max(pull(aisles, n)))
 
 ```
 
-There are `r nrow(aisles)` different aisles. Aisle `r pull(max_aisle, aisle_id)` had the most items ordered from it.
+There are `r nrow(aisles)` different aisles. The `r pull(max_aisle, aisle)` aisle had the most items ordered from it.
 
 
 #### Aisle plot
@@ -38,10 +38,27 @@ There are `r nrow(aisles)` different aisles. Aisle `r pull(max_aisle, aisle_id)`
 
 aisles_over_10000 = aisles %>% filter(n > 10000)
 
-aisle_plot <- ggplot(data=aisles_over_10000, aes(x=as.factor(aisle_id), y=n)) +
-  geom_bar(stat="identity") + xlab("Aisle ID") + ylab("Number of items ordered") +
-  theme(axis.text.x = element_text(angle = 90))
+aisle_plot <- ggplot(data=aisles_over_10000, aes(x=reorder(aisle, n), y=n)) +
+  geom_bar(stat="identity") + xlab("Aisle") + ylab("Number of items ordered") +
+  coord_flip(xlim = NULL, ylim = NULL, expand = TRUE, clip = "on")
 
 aisle_plot
+
+```
+
+
+#### Baking ingredients, dog food/care, and packaged vegetables/fruits table
+
+```{r}
+
+three_aisles = instacart %>%
+                filter(aisle == "baking ingredients" |
+                         aisle == "dog food care" |
+                         aisle == "packaged vegetables fruits") %>%
+                group_by(aisle, product_name) %>%
+                summarize(n_obs = n()) %>%
+                filter(min_rank(desc(n_obs)) < 4)
+
+three_aisles
 
 ```
