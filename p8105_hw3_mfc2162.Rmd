@@ -102,6 +102,8 @@ data("brfss_smart2010")
 
 brfss = brfss_smart2010 %>%
         janitor::clean_names() %>%
+        mutate(state = locationabbr) %>%
+        mutate(location = locationdesc) %>%
         filter(topic == "Overall Health") %>%
         mutate(response = factor(response, levels = str_c(c("Poor",
                                                             "Fair",
@@ -118,9 +120,9 @@ brfss = brfss_smart2010 %>%
 
 brfss_2002 = brfss %>%
               filter(year == 2002) %>%
-              select(locationabbr, locationdesc) %>%
+              select(state, location) %>%
               distinct() %>%
-              group_by(locationabbr) %>%
+              group_by(state) %>%
               summarize(n_obs = n()) %>%
               filter(n_obs > 6)
 
@@ -135,9 +137,9 @@ brfss_2002
 
 brfss_2010 = brfss %>%
               filter(year == 2010) %>%
-              select(locationabbr, locationdesc) %>%
+              select(state, location) %>%
               distinct() %>%
-              group_by(locationabbr) %>%
+              group_by(state) %>%
               summarize(n_obs = n()) %>%
               filter(n_obs > 6)
 
@@ -145,3 +147,15 @@ brfss_2010
 
 ```
 
+
+#### Excellent responses
+
+```{r}
+
+excellent = brfss %>%
+            filter(response == "Excellent") %>%
+            select(year, state, data_value) %>%
+            group_by(year, state) %>%
+            summarize(mean_data_value = mean(data_value))
+
+```
