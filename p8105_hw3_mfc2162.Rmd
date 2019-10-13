@@ -110,3 +110,38 @@ brfss = brfss_smart2010 %>%
                                                             "Excellent"))))
 
 ```
+
+
+#### States observed at 7 or more locations in 2002
+
+```{r}
+
+brfss_2002 = brfss %>%
+              filter(year == 2002) %>%
+              select(locationabbr, locationdesc) %>%
+              distinct() %>%
+              group_by(locationabbr) %>%
+              summarize(n_obs = n()) %>%
+              filter(n_obs > 6)
+
+brfss_2002
+
+```
+
+
+#### States observed at 7 or more locations in 2010
+
+```{r}
+
+brfss_2010 = brfss %>%
+              filter(year == 2010) %>%
+              select(locationabbr, locationdesc) %>%
+              distinct() %>%
+              group_by(locationabbr) %>%
+              summarize(n_obs = n()) %>%
+              filter(n_obs > 6)
+
+brfss_2010
+
+```
+
