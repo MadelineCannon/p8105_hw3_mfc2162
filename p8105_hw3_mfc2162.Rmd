@@ -112,6 +112,8 @@ brfss = brfss_smart2010 %>%
                                                             "Very good",
                                                             "Excellent"))))
 
+brfss
+
 ```
 
 
@@ -159,6 +161,8 @@ excellent = brfss %>%
             group_by(year, state) %>%
             summarize(mean_data_value = mean(data_value))
 
+excellent
+
 ```
 
 
@@ -169,6 +173,7 @@ excellent = brfss %>%
 spaghetti_plot = excellent %>%
                   ggplot(aes(x = year, y = mean_data_value, color = state)) +
                     geom_line() + xlab("Year") + ylab("Mean Data Value") +
+                    labs(color = "State") +
                     ggtitle("Mean data value over time")
 
 spaghetti_plot
@@ -184,7 +189,8 @@ ny_plot = brfss %>%
             filter(year == 2006 | year == 2010) %>%
             filter(state == "NY") %>%
             ggplot(aes(x=response, y=data_value)) + geom_boxplot() +
-              facet_grid(~year) + xlab("Response") + ylab("Data Value")
+              facet_grid(~year) + xlab("Response") + ylab("Data Value") +
+              ggtitle("Distribution of Responses")
 
 
 ny_plot
@@ -207,7 +213,12 @@ accel = read_csv("./data/accel_data.csv") %>%
             values_to = "activity"
           ) %>%
           mutate(activity = as.numeric(activity)) %>%
+          mutate(minute = as.numeric(minute)) %>%
           mutate(wkdy_wknd = "weekday") %>%
+          mutate(day = as.factor(day)) %>%
+          mutate(day = factor(day, levels = c("Sunday", "Monday", "Tuesday",
+                                              "Wednesday", "Thursday",
+                                              "Friday", "Saturday"))) %>%
           select(week, day_id, day, wkdy_wknd, minute, activity)
 
 for (row in 1:nrow(accel)) {
@@ -241,3 +252,24 @@ agg_act_plot
 ```
 
 I can't see any obvious trends in the data. It looks like activity decreases slightly towards the end of the observation period.
+
+
+#### Daily activity plot
+
+```{r}
+
+daily_act = accel %>%
+              mutate(hour = floor(minute / 60)) %>%
+              group_by(hour, day) %>%
+              summarize(mean_act = mean(activity))
+
+daily_plot = ggplot(daily_act, aes(x=hour, y=mean_act, color=day)) +
+              geom_line() + xlab("Hour") + ylab("Average Activity") +
+              labs(color = "Day") +
+              ggtitle("Average hourly activity by day of the week")
+
+daily_plot
+
+```
+
+Most activity occurs between 7am and 9pm for any day of the week. There is very little activity between 12am and 5am. On Sundays there is a lot of activity between 10am and 12pm, and on Fridays there is a lot of activity between 8pm and 9pm.
