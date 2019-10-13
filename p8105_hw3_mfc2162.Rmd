@@ -174,3 +174,19 @@ spaghetti_plot = excellent %>%
 spaghetti_plot
 
 ```
+
+
+#### Plot: NY responses, 2006 and 2010
+
+```{r}
+
+ny_plot = brfss %>%
+            filter(year == 2006 | year == 2010) %>%
+            filter(state == "NY") %>%
+            ggplot(aes(x=response, y=data_value)) + geom_boxplot() +
+              facet_grid(~year) + xlab("Response") + ylab("Data Value")
+
+
+ny_plot
+
+```
