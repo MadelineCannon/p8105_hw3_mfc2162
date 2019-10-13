@@ -221,3 +221,23 @@ accel
 ```
 
 The dataset has `r nrow(accel)` observations and `r ncol(accel)` variables. The variables are week, day_id, day, wkdy_wknd (which says if it is a weekday or weekend), minute, and activity. Each observation corresponds to the activity count for that particular minute of that particular day.
+
+
+#### Aggregated activity table
+
+```{r}
+
+agg_act = accel %>%
+            group_by(day_id) %>%
+            summarize(total_act = sum(activity))
+
+agg_act
+
+agg_act_plot = ggplot(agg_act, aes(x=day_id, y=total_act)) +
+  geom_bar(stat="identity")
+
+agg_act_plot
+
+```
+
+I can't see any obvious trends in the data. It looks like activity decreases slightly towards the end of the observation period.
