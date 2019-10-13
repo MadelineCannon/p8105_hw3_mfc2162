@@ -19,6 +19,7 @@ data("instacart")
 
 There are `r nrow(instacart)` observations and `r ncol(instacart)` variables in this dataset. Each observation is a product that was ordered. Some key variables are the hour of the day at which the product was ordered, the number of days since the last order, the name of the product, and the aisle and department that it is in. An example of an observation is Bulgarian yogurt, which was part of order 1, ordered at 10:00, and from the dairy and eggs department.
 
+
 #### Aisle description
 
 ```{r}
@@ -32,7 +33,6 @@ There are `r nrow(aisles)` different aisles. The `r pull(max_aisle, aisle)` aisl
 
 
 #### Aisle plot
-
 
 ```{r}
 
@@ -74,34 +74,39 @@ mean_hour_table = instacart %>%
                     group_by(product_name, order_dow) %>%
                     summarize(mean_hour = mean(order_hour_of_day)) %>%
                     pivot_wider(names_from = "product_name",
-                                values_from = "mean_hour")
-
-for (row in 1:nrow(mean_hour_table)) {
-  if (mean_hour_table[row, "order_dow"] == 0) {
-    mean_hour_table[row, "order_dow"] = "Sunday"
-  }
-  if (mean_hour_table[row, "order_dow"] == 1) {
-    mean_hour_table[row, "order_dow"] = "Monday"
-  }
-  if (mean_hour_table[row, "order_dow"] == 2) {
-    mean_hour_table[row, "order_dow"] = "Tuesday"
-  }
-  if (mean_hour_table[row, "order_dow"] == 3) {
-    mean_hour_table[row, "order_dow"] = "Wednesday"
-  }
-  if (mean_hour_table[row, "order_dow"] == 4) {
-    mean_hour_table[row, "order_dow"] = "Thursday"
-  }
-  if (mean_hour_table[row, "order_dow"] == 5) {
-    mean_hour_table[row, "order_dow"] = "Friday"
-  }
-  if (mean_hour_table[row, "order_dow"] == 6) {
-    mean_hour_table[row, "order_dow"] = "Saturday"
-  }
-}
+                                values_from = "mean_hour") %>%
+                    mutate(order_dow = c("Sunday", "Monday", "Tuesday",
+                                         "Wednesday", "Thursday", "Friday",
+                                         "Saturday"))
 
 names(mean_hour_table) = c("Day of the Week", "Pink Lady Apples", "Coffee Ice Cream")
 
 mean_hour_table
+
+```
+
+## Problem 2
+
+#### Load data
+
+```{r}
+
+data("brfss_smart2010")
+
+```
+
+
+#### Clean data
+
+```{r}
+
+brfss = brfss_smart2010 %>%
+        janitor::clean_names() %>%
+        filter(topic == "Overall Health") %>%
+        mutate(response = factor(response, levels = str_c(c("Poor",
+                                                            "Fair",
+                                                            "Good",
+                                                            "Very good",
+                                                            "Excellent"))))
 
 ```
